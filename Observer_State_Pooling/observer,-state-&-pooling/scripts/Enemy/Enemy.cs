@@ -4,7 +4,7 @@ using System;
 public partial class Enemy : Node3D
 {
 	IEnemyState state;
-	Node3D player;
+	CharacterController player;
 
 	[Export] public MeshInstance3D graphics;
 
@@ -55,7 +55,7 @@ public partial class Enemy : Node3D
 		state.Initialize(this, player);
 	}
 
-	public void Initialize(Node3D _player, Vector3 position)
+	public void Initialize(CharacterController _player, Vector3 position)
 	{
 		inUse = true;
 		player = _player;
@@ -66,7 +66,6 @@ public partial class Enemy : Node3D
 	public void Die()
 	{
 		inUse = false;
-		GD.Print("Enemy died");
 	}
 
 	public bool InUse() { return inUse; }

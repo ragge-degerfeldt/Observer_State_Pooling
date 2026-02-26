@@ -1,8 +1,10 @@
-[gd_scene load_steps=10 format=4 uid="uid://d2sbs6hqmi83d"]
+[gd_scene load_steps=15 format=4 uid="uid://d2sbs6hqmi83d"]
 
-[ext_resource type="Script" uid="uid://dd44itrubucgh" path="res://scripts/PlayerMovement.cs" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://dd44itrubucgh" path="res://scripts/CharacterController.cs" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://7y1xxkgo8t8r" path="res://scripts/Health.cs" id="2_1bvp3"]
 [ext_resource type="Script" uid="uid://derypmavvawbj" path="res://scripts/Enemy/EnemyPool.cs" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://d4bc2fnwiq5vs" path="res://prefabs/enemy.tscn" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://leo2jahxantr" path="res://scripts/Particles.cs" id="3_lquwl"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_0xm2m"]
 
@@ -52,6 +54,25 @@ shadow_mesh = SubResource("ArrayMesh_oifap")
 height = 1.1252441
 radius = 0.24023438
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1bvp3"]
+inherit_velocity_ratio = 1.0
+direction = Vector3(0, 1, 0)
+spread = 15.907
+initial_velocity_max = 5.0
+scale_min = 0.5
+scale_max = 1.1999999
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
+albedo_color = Color(1, 0, 0, 1)
+proximity_fade_enabled = true
+stencil_flags = 2
+stencil_color = Color(0.2945523, 0.00018253287, 0.00010014806, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_lquwl"]
+material = SubResource("StandardMaterial3D_1bvp3")
+radius = 0.05
+height = 0.1
+
 [node name="Root" type="Node3D"]
 
 [node name="Floor" type="Node3D" parent="."]
@@ -82,14 +103,31 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.56543994, 0)
 shape = SubResource("CylinderShape3D_ig7tw")
 
 [node name="Camera" type="Camera3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 0.7421163, 0.67027116, 0, -0.67027116, 0.7421163, 0, 2.5101135, 1.6091003)
+transform = Transform3D(1, 0, 0, 0, 0.7421163, 0.67027116, 0, -0.67027116, 0.7421163, 0, 4.233423, 3.4851837)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1.1924881e-08, 1, 0, -1, 1.1924881e-08, 0, 28.34469, 0)
+[node name="HealthUI" type="Label3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.74702835, 0.25938225)
+modulate = Color(0, 1, 0, 1)
+text = "III"
+script = ExtResource("2_1bvp3")
+
+[node name="Spotlight" type="SpotLight3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1.1924881e-08, 1, 0, -1, 1.1924881e-08, 0, 17.213371, 0)
 light_color = Color(0.99999887, 0.9957848, 0.75926846, 1)
 light_energy = 1.8
-spot_range = 109.696594
-spot_angle = 67.457405
+spot_range = 31.38468
+spot_angle = 17.177357
+
+[node name="Audio" type="AudioStreamPlayer3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3287543, 0)
+
+[node name="Particles" type="GPUParticles3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.518785, 0)
+amount = 80
+randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_1bvp3")
+draw_pass_1 = SubResource("SphereMesh_lquwl")
+script = ExtResource("3_lquwl")
 
 [node name="EnemyPool" type="Node" parent="." node_paths=PackedStringArray("enemyParent", "player")]
 script = ExtResource("2_h2yge")

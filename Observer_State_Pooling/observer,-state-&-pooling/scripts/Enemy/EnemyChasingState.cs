@@ -4,7 +4,7 @@ using System;
 public class EnemyChasingState : IEnemyState
 {
 	Enemy enemy;
-	Node3D player;
+	CharacterController player;
 
 	float movementSpeed = 0.5f;
 	float timer = 0.0f;
@@ -30,7 +30,7 @@ public class EnemyChasingState : IEnemyState
 		return null;
 	}
 
-	public void Initialize(Enemy _enemy, Node3D _player)
+	public void Initialize(Enemy _enemy, CharacterController _player)
 	{
 		enemy = _enemy;
 		player = _player;
@@ -39,6 +39,7 @@ public class EnemyChasingState : IEnemyState
 	public IEnemyState HorizontalCollision()
 	{
 		enemy.graphics.Position = new Vector3(0.0f, 0.0f, 0.0f);
+		player.Damaged();
 		return new EnemyWaitingState();
 	}
 

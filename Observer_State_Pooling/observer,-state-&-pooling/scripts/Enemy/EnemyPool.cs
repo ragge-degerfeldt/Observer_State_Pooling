@@ -7,7 +7,7 @@ public partial class EnemyPool : Node
 
 	[Export] Node3D enemyParent;
 	[Export] PackedScene enemyPrefab;
-	[Export] Node3D player;
+	[Export] CharacterController player;
 	[Export] float enemyMinSpawnDistance = 5.0f;
 	[Export] float enemySpawnFrequency = 5.0f;
 

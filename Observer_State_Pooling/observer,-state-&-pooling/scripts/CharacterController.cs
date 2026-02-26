@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class PlayerMovement : CharacterBody3D
+public partial class CharacterController : CharacterBody3D
 {
 	[Export] float Speed = 7.0f;
 	[Export] float JumpVelocity = 4.5f;
@@ -13,6 +13,13 @@ public partial class PlayerMovement : CharacterBody3D
 	string moveRight = "Right";
 
 	[Export] Node3D camera;
+
+	public Subject subject;
+
+    public override void _EnterTree()
+	{
+		subject = new Subject();
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
@@ -51,5 +58,10 @@ public partial class PlayerMovement : CharacterBody3D
 
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+
+	public void Damaged()
+	{
+		subject.Notify(Event.PlayerDamaged);
 	}
 }

@@ -4,7 +4,7 @@ using System;
 public class EnemyIdleState : IEnemyState
 {
 	Enemy enemy;
-	Node3D player;
+	CharacterController player;
 
 	float detectionDistance = 5.0f;
 
@@ -17,7 +17,7 @@ public class EnemyIdleState : IEnemyState
 		return null;
 	}	
 
-	public void Initialize(Enemy _enemy, Node3D _player)
+	public void Initialize(Enemy _enemy, CharacterController _player)
 	{
 		enemy = _enemy;
 		player = _player;
@@ -25,6 +25,7 @@ public class EnemyIdleState : IEnemyState
 
 	public IEnemyState HorizontalCollision()
 	{
+		player.Damaged();
 		return new EnemyWaitingState();
 	}
 

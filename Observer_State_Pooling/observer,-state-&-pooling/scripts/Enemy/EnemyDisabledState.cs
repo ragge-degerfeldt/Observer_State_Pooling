@@ -22,7 +22,7 @@ public class EnemyDisabledState : IEnemyState
 		return null;
 	}
 
-	public void Initialize(Enemy _enemy, Node3D _player)
+	public void Initialize(Enemy _enemy, CharacterController _player)
 	{
 		enemy = _enemy;	
 

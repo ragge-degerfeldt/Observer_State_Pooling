@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 public class EnemyWaitingState : IEnemyState
 {
 	Enemy enemy;
-	Node3D player;
+	CharacterController player;
 	
 	float timer = 0.0f;
 	float waitDuration = 3.0f;
@@ -20,7 +20,7 @@ public class EnemyWaitingState : IEnemyState
 		return null;
 	}
 
-	public void Initialize(Enemy _enemy, Node3D _player)
+	public void Initialize(Enemy _enemy, CharacterController _player)
 	{
 		enemy = _enemy;
 		player = _player;
