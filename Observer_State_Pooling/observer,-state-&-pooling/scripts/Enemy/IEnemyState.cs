@@ -3,8 +3,8 @@ using System;
 
 public interface IEnemyState
 {
-	public IEnemyState Update(float delta);
+	public void Update(float delta, ref IEnemyState state);
 	public void Initialize(Enemy _enemy, CharacterController _player);
-	public IEnemyState HorizontalCollision();
-	public IEnemyState VerticalCollision();
+	public void HorizontalCollision(ref IEnemyState state);
+	public void VerticalCollision(ref IEnemyState state);
 }

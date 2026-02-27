@@ -12,7 +12,7 @@ public class EnemyChasingState : IEnemyState
 	float graphicsMaxOffset = 0.15f;
 	float graphicsAnimationSpeed = 8.0f;
 
-	public IEnemyState Update(float delta)
+	public void Update(float delta, ref IEnemyState state)
 	{
 		Vector3 direction = player.Position;
 		direction.Y = 0.0f;
@@ -22,12 +22,13 @@ public class EnemyChasingState : IEnemyState
 		if ((player.Position - enemy.Position).Length() > loseDetectionDistance)
 		{
 			enemy.graphics.Position = new Vector3(0.0f, 0.0f, 0.0f);
-			return new EnemyIdleState();
+			state = new EnemyIdleState();
+			state.Initialize(enemy,player);
+			return;
 		}
 
 		enemy.graphics.Position = new Vector3(0.0f,graphicsMaxOffset + Mathf.Sin(timer) * graphicsMaxOffset, 0.0f);
 		timer += delta * graphicsAnimationSpeed;
-		return null;
 	}
 
 	public void Initialize(Enemy _enemy, CharacterController _player)
@@ -36,16 +37,18 @@ public class EnemyChasingState : IEnemyState
 		player = _player;
 	}
 
-	public IEnemyState HorizontalCollision()
+	public void HorizontalCollision(ref IEnemyState state)
 	{
 		enemy.graphics.Position = new Vector3(0.0f, 0.0f, 0.0f);
 		player.Damaged();
-		return new EnemyWaitingState();
+		state = new EnemyWaitingState();
+		state.Initialize(enemy, player);
 	}
 
-	public IEnemyState VerticalCollision()
+	public void VerticalCollision(ref IEnemyState state)
 	{
 		enemy.graphics.Position = new Vector3(0.0f, 0.0f, 0.0f);
-		return new EnemyDisabledState();
+		state = new EnemyDisabledState();
+		state.Initialize(enemy, player);
 	}
 }

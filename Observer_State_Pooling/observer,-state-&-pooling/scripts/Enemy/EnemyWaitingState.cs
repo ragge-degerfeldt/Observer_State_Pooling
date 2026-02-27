@@ -6,18 +6,19 @@ public class EnemyWaitingState : IEnemyState
 {
 	Enemy enemy;
 	CharacterController player;
+
 	
 	float timer = 0.0f;
 	float waitDuration = 3.0f;
 
-	public IEnemyState Update(float delta)
+	public void Update(float delta, ref IEnemyState state)
 	{
 		timer += delta;
 		if (timer > waitDuration)
 		{
-			return new EnemyIdleState();
+			state = new EnemyIdleState();
+			state.Initialize(enemy, player);
 		}
-		return null;
 	}
 
 	public void Initialize(Enemy _enemy, CharacterController _player)
@@ -26,13 +27,11 @@ public class EnemyWaitingState : IEnemyState
 		player = _player;
 	}
 
-	public IEnemyState HorizontalCollision()
-	{
-		return null;
-	}
+	public void HorizontalCollision(ref IEnemyState state) {}
 
-	public IEnemyState VerticalCollision()
+	public void VerticalCollision(ref IEnemyState state)
 	{
-		return new EnemyDisabledState();
+		state = new EnemyDisabledState();
+		state.Initialize(enemy, player);
 	}
 }

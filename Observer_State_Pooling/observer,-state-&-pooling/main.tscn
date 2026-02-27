@@ -1,10 +1,25 @@
-[gd_scene load_steps=15 format=4 uid="uid://d2sbs6hqmi83d"]
+[gd_scene load_steps=34 format=4 uid="uid://d2sbs6hqmi83d"]
 
 [ext_resource type="Script" uid="uid://dd44itrubucgh" path="res://scripts/CharacterController.cs" id="2_0xm2m"]
 [ext_resource type="Script" uid="uid://7y1xxkgo8t8r" path="res://scripts/Health.cs" id="2_1bvp3"]
 [ext_resource type="Script" uid="uid://derypmavvawbj" path="res://scripts/Enemy/EnemyPool.cs" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://d4bc2fnwiq5vs" path="res://prefabs/enemy.tscn" id="3_1bvp3"]
 [ext_resource type="Script" uid="uid://leo2jahxantr" path="res://scripts/Particles.cs" id="3_lquwl"]
+[ext_resource type="Script" uid="uid://cy2pqrmqgbrgg" path="res://scripts/PlayerAudio.cs" id="4_yaehf"]
+[ext_resource type="AudioStream" uid="uid://bmvv72aaswsly" path="res://audio/hit/Hit 1.wav" id="5_074og"]
+[ext_resource type="AudioStream" uid="uid://gbja6aqk10fg" path="res://audio/hit/Hit 2.wav" id="6_cegan"]
+[ext_resource type="AudioStream" uid="uid://dv7nva1wnik5o" path="res://audio/hit/Hit 3.wav" id="7_82xsv"]
+[ext_resource type="AudioStream" uid="uid://cokquau5pjcqg" path="res://audio/hit/Hit 4.wav" id="8_getpj"]
+[ext_resource type="AudioStream" uid="uid://hy6l280kg5uy" path="res://audio/hit/Hit 6.wav" id="9_ryguw"]
+[ext_resource type="AudioStream" uid="uid://b41pqy6uj081n" path="res://audio/jump/Jump 1.wav" id="10_d13ii"]
+[ext_resource type="AudioStream" uid="uid://n37hpqebr5te" path="res://audio/jump/Jump 2.wav" id="11_1u8w0"]
+[ext_resource type="AudioStream" uid="uid://dme8tsnf3j3nj" path="res://audio/jump/Jump 3.wav" id="12_0odxb"]
+[ext_resource type="AudioStream" uid="uid://b6ey48km03qji" path="res://audio/jump/Jump 4.wav" id="13_lswn8"]
+[ext_resource type="AudioStream" uid="uid://or0nwfyn6cxk" path="res://audio/hurt/Explosion 4.wav" id="14_a6jrf"]
+[ext_resource type="AudioStream" uid="uid://nppdwr1rjdwy" path="res://audio/hurt/Explosion 5.wav" id="15_xuqvo"]
+[ext_resource type="AudioStream" uid="uid://nqcapw47mn5f" path="res://audio/demon-go.mp3" id="16_074og"]
+[ext_resource type="Script" uid="uid://nd6biewt7jg2" path="res://GameOverUI.cs" id="18_82xsv"]
+[ext_resource type="FontFile" uid="uid://pjxbb70fyon0" path="res://DungeonFont.ttf" id="19_cegan"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_0xm2m"]
 
@@ -73,6 +88,34 @@ material = SubResource("StandardMaterial3D_1bvp3")
 radius = 0.05
 height = 0.1
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_qsp4k"]
+streams_count = 5
+stream_0/stream = ExtResource("5_074og")
+stream_1/stream = ExtResource("6_cegan")
+stream_2/stream = ExtResource("7_82xsv")
+stream_3/stream = ExtResource("8_getpj")
+stream_4/stream = ExtResource("9_ryguw")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_kq58d"]
+streams_count = 4
+stream_0/stream = ExtResource("10_d13ii")
+stream_1/stream = ExtResource("11_1u8w0")
+stream_2/stream = ExtResource("12_0odxb")
+stream_3/stream = ExtResource("13_lswn8")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_seu75"]
+streams_count = 2
+stream_0/stream = ExtResource("14_a6jrf")
+stream_1/stream = ExtResource("15_xuqvo")
+
+[sub_resource type="LabelSettings" id="LabelSettings_82xsv"]
+font = ExtResource("19_cegan")
+font_size = 72
+outline_size = 16
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 0
+shadow_color = Color(0, 0, 0, 1)
+
 [node name="Root" type="Node3D"]
 
 [node name="Floor" type="Node3D" parent="."]
@@ -118,9 +161,6 @@ light_energy = 1.8
 spot_range = 31.38468
 spot_angle = 17.177357
 
-[node name="Audio" type="AudioStreamPlayer3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3287543, 0)
-
 [node name="Particles" type="GPUParticles3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.518785, 0)
 amount = 80
@@ -128,6 +168,43 @@ randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_1bvp3")
 draw_pass_1 = SubResource("SphereMesh_lquwl")
 script = ExtResource("3_lquwl")
+
+[node name="Audio" type="Node3D" parent="Player" node_paths=PackedStringArray("hit", "jump", "hurt", "death")]
+script = ExtResource("4_yaehf")
+hit = NodePath("HitAudio")
+jump = NodePath("JumpAudio")
+hurt = NodePath("HurtAudio")
+death = NodePath("GameOver")
+
+[node name="HitAudio" type="AudioStreamPlayer3D" parent="Player/Audio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3287543, 0)
+stream = SubResource("AudioStreamRandomizer_qsp4k")
+
+[node name="JumpAudio" type="AudioStreamPlayer3D" parent="Player/Audio"]
+stream = SubResource("AudioStreamRandomizer_kq58d")
+
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="Player/Audio"]
+stream = SubResource("AudioStreamRandomizer_seu75")
+
+[node name="GameOver" type="AudioStreamPlayer3D" parent="Player/Audio"]
+stream = ExtResource("16_074og")
+
+[node name="GameOverUI" type="Label" parent="Player"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.5
+offset_top = -36.5
+offset_right = 140.5
+offset_bottom = 36.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "game over"
+label_settings = SubResource("LabelSettings_82xsv")
+horizontal_alignment = 1
+script = ExtResource("18_82xsv")
 
 [node name="EnemyPool" type="Node" parent="." node_paths=PackedStringArray("enemyParent", "player")]
 script = ExtResource("2_h2yge")

@@ -5,10 +5,11 @@ public class EnemyDisabledState : IEnemyState
 {
 	Enemy enemy;
 	StandardMaterial3D mat;
+	CharacterController player;
 
 	float alpha = 0.0f;
 
-	public IEnemyState Update(float delta)
+	public void Update(float delta, ref IEnemyState state)
 	{
 		mat.AlbedoColor = Color.FromHsv(540.0f, 100.0f, 41.0f, alpha);
 		enemy.Position -= new Vector3(0.0f, 0.5f * delta, 0.0f);
@@ -16,16 +17,17 @@ public class EnemyDisabledState : IEnemyState
 		{
 			enemy.Die();
 			SetDefaultOverlay();
-			return new EnemyIdleState();
+			state = new EnemyIdleState();
+			state.Initialize(enemy, player);
 		}
 		alpha += delta * 0.0001f;
-		return null;
 	}
 
 	public void Initialize(Enemy _enemy, CharacterController _player)
 	{
-		enemy = _enemy;	
-
+		enemy = _enemy;
+		player = _player;
+		_player.subject.Notify(Event.PlayerAttacked);
 		SetDefaultOverlay();
 	}
 
@@ -37,13 +39,7 @@ public class EnemyDisabledState : IEnemyState
 		enemy.graphics.MaterialOverlay = mat;
 	}
 
-	public IEnemyState HorizontalCollision()
-	{
-		return null;
-	}
+	public void HorizontalCollision(ref IEnemyState state) {}
 
-	public IEnemyState VerticalCollision()
-	{
-		return null;
-	}
+	public void VerticalCollision(ref IEnemyState state) {}
 }

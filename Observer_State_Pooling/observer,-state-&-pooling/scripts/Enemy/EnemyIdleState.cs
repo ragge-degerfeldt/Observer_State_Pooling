@@ -6,15 +6,16 @@ public class EnemyIdleState : IEnemyState
 	Enemy enemy;
 	CharacterController player;
 
+
 	float detectionDistance = 5.0f;
 
-	public IEnemyState Update(float delta)
+	public void Update(float delta, ref IEnemyState state)
 	{
 		if ((enemy.Position - player.Position).Length() < detectionDistance)
 		{
-			return new EnemyChasingState();
+			state = new EnemyChasingState();
+			state.Initialize(enemy, player);
 		}
-		return null;
 	}	
 
 	public void Initialize(Enemy _enemy, CharacterController _player)
@@ -23,14 +24,16 @@ public class EnemyIdleState : IEnemyState
 		player = _player;
 	}
 
-	public IEnemyState HorizontalCollision()
+	public void HorizontalCollision(ref IEnemyState state)
 	{
 		player.Damaged();
-		return new EnemyWaitingState();
+		state = new EnemyWaitingState();
+		state.Initialize(enemy, player);
 	}
 
-	public IEnemyState VerticalCollision()
+	public void VerticalCollision(ref IEnemyState state)
 	{
-		return new EnemyDisabledState();
+		state = new EnemyDisabledState();
+		state.Initialize(enemy, player);
 	}
 }

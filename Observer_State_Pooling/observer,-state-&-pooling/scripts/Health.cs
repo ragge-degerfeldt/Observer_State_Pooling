@@ -5,11 +5,13 @@ public partial class Health : Label3D, Observer
 {
 	int health;
 
+	CharacterController player;
+
     public override void _Ready()
 	{
 		health = 3;
 		UpdateUI();
-		CharacterController player = (CharacterController)GetParent();
+		player = (CharacterController)GetParent();
 		player.subject.Register(this);
 	}
 
@@ -21,7 +23,7 @@ public partial class Health : Label3D, Observer
 			health--;
 			if (health <= 0)
 			{
-				// Die
+				player.subject.Notify(Event.PlayerDied);
 			}
 			UpdateUI();
 			break;

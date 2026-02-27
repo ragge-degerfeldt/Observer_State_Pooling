@@ -5,7 +5,8 @@ public enum Event
 {
 	PlayerDamaged,
 	PlayerAttacked,
-	PlayerJumped
+	PlayerJumped,
+	PlayerDied
 }
 
 public class Subject

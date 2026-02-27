@@ -10,7 +10,6 @@ public partial class Enemy : Node3D
 
     public override void _Ready()
 	{
-		SetState(new EnemyIdleState());
 	}
 
 	bool inUse = false;
@@ -18,22 +17,15 @@ public partial class Enemy : Node3D
     public override void _Process(double delta)
 	{
 		if (!inUse) { return; }
-		IEnemyState newState = state.Update((float)delta);
-		if (newState != null)
-		{
-			SetState(newState);
-		}
+		
+		state.Update((float)delta, ref state);
 	}
 
 	public void HorizontalCollision(Node3D obj)
 	{
 		if (obj == player)
 		{
-			IEnemyState newState = state.HorizontalCollision();
-			if (newState != null)
-			{
-				SetState(newState);
-			}
+			state.HorizontalCollision(ref state);
 		}
 	}
 
@@ -41,26 +33,18 @@ public partial class Enemy : Node3D
 	{
 		if (obj == player)
 		{
-			IEnemyState newState = state.VerticalCollision();
-			if (newState != null)
-			{
-				SetState(newState);
-			}
+			state.VerticalCollision(ref state);
 		}
 	}
 
-	private void SetState(IEnemyState newState)
-	{
-		state = newState;
-		state.Initialize(this, player);
-	}
 
 	public void Initialize(CharacterController _player, Vector3 position)
 	{
 		inUse = true;
 		player = _player;
 		Position = position;
-		SetState(new EnemyIdleState());
+		state = new EnemyIdleState();
+		state.Initialize(this, player);
 	}
 
 	public void Die()

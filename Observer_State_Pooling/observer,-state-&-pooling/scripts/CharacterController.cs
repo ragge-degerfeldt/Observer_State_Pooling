@@ -25,15 +25,14 @@ public partial class CharacterController : CharacterBody3D
 	{
 		Vector3 velocity = Velocity;
 
-		// Add the gravity.
 		if (!IsOnFloor())
 		{
 			velocity += GetGravity() * (float)delta;
 		}
 
-		// Handle Jump.
 		if (Input.IsActionJustPressed(jump) && IsOnFloor())
 		{
+			subject.Notify(Event.PlayerJumped);
 			velocity.Y = JumpVelocity;
 		}
 
