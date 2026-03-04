@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class CharacterController : CharacterBody3D
+public partial class CharacterController : CharacterBody3D, ISubject
 {
 	[Export] float Speed = 7.0f;
 	[Export] float JumpVelocity = 4.5f;
@@ -62,5 +62,10 @@ public partial class CharacterController : CharacterBody3D
 	public void Damaged()
 	{
 		subject.Notify(Event.PlayerDamaged);
+	}
+
+	public Subject GetSubject()
+	{
+		return subject;
 	}
 }

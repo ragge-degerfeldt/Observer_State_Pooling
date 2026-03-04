@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Health : Label3D, Observer
+public partial class Health : Label3D, IObserver
 {
 	int health;
 

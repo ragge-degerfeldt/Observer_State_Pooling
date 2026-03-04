@@ -1,17 +1,21 @@
 using Godot;
 using System;
 
-public partial class Particles : GpuParticles3D, Observer
+public partial class Particles : GpuParticles3D, IObserver
 {
 	float timer = 0.0f;
 	
 	[Export] float emissionDuration = 1.0f;
 
+	[Export] Node subject;
+
 	public override void _Ready()
 	{
 		Emitting = false;
-		CharacterController player = (CharacterController)GetParent();
-		player.subject.Register(this);
+		if(!Subject.TryRegister(subject, this))
+		{
+			GD.Print("Player Particles observer did not register");
+		}
 	}
 
 	public override void _Process(double delta)

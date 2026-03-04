@@ -11,7 +11,7 @@ public enum Event
 
 public class Subject
 {
-	Observer[] observers;
+	IObserver[] observers;
 
 	public void Notify(Event _event)
 	{
@@ -23,12 +23,12 @@ public class Subject
 
 	public Subject()
 	{
-		observers = Array.Empty<Observer>();
+		observers = Array.Empty<IObserver>();
 	}
 
-	public void Register(Observer _observer)
+	public void Register(IObserver _observer)
 	{
-		Observer[] temp = new Observer[observers.Length + 1];
+		IObserver[] temp = new IObserver[observers.Length + 1];
 		for (int i = 0; i < observers.Length; i++)
 		{
 			temp[i] = observers[i];
@@ -37,9 +37,9 @@ public class Subject
 		observers = temp;
 	}
 
-	public bool UnRegister(Observer _observer)
+	public bool UnRegister(IObserver _observer)
 	{
-		Observer[] temp = new Observer[observers.Length - 1];
+		IObserver[] temp = new IObserver[observers.Length - 1];
 		int ctr = 0;
 		for (int i = 0; i < observers.Length; i++)
 		{
@@ -50,5 +50,16 @@ public class Subject
 		}
 		observers = temp;
 		return true;
+	}
+
+	public static bool TryRegister(Node subject, IObserver observer)
+	{
+		if (subject is ISubject)
+		{
+			ISubject iSub = (ISubject)subject;
+			iSub.GetSubject().Register(observer);
+			return true;
+		}
+		return false;
 	}
 }

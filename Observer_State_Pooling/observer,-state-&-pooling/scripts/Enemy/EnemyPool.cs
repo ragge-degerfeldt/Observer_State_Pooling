@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class EnemyPool : Node
+public partial class EnemyPool : Node, IObserver
 {
 	Enemy[] enemies;
 
@@ -15,11 +15,14 @@ public partial class EnemyPool : Node
 
 	RandomNumberGenerator rng = new RandomNumberGenerator();
 
+	bool disabled = false;
+
 	float timer = 0.0f;
 
 	public override void _Ready()
 	{
 		enemies = new Enemy[enemyLimit];
+		player.subject.Register(this);
 		for (int i = 0; i < enemyLimit; i++)
 		{
 			Node instance = ResourceLoader.Load<PackedScene>(enemyPrefab.ResourcePath).Instantiate();
@@ -34,6 +37,7 @@ public partial class EnemyPool : Node
 
 	public override void _Process(double delta)
 	{
+		if (disabled) { return; }
 		timer += (float)delta;
 		if (timer >= 5.0f)
 		{
@@ -72,6 +76,20 @@ public partial class EnemyPool : Node
 				enemy.Initialize(player, GeneratePosition());
 				return;
 			}
+		}
+	}
+
+	public void OnNotify(Event _event)
+	{
+		switch(_event)
+		{
+		case Event.PlayerDied:
+			disabled = true;
+			for (int i = 0; i < enemyLimit; i++)
+			{
+				enemies[i].QueueFree();
+			}
+			break;
 		}
 	}
 }

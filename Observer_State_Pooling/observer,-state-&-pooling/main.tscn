@@ -18,7 +18,7 @@
 [ext_resource type="AudioStream" uid="uid://or0nwfyn6cxk" path="res://audio/hurt/Explosion 4.wav" id="14_a6jrf"]
 [ext_resource type="AudioStream" uid="uid://nppdwr1rjdwy" path="res://audio/hurt/Explosion 5.wav" id="15_xuqvo"]
 [ext_resource type="AudioStream" uid="uid://nqcapw47mn5f" path="res://audio/demon-go.mp3" id="16_074og"]
-[ext_resource type="Script" uid="uid://nd6biewt7jg2" path="res://GameOverUI.cs" id="18_82xsv"]
+[ext_resource type="Script" uid="uid://nd6biewt7jg2" path="res://scripts/GameOverUI.cs" id="18_82xsv"]
 [ext_resource type="FontFile" uid="uid://pjxbb70fyon0" path="res://DungeonFont.ttf" id="19_cegan"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_0xm2m"]
@@ -161,20 +161,22 @@ light_energy = 1.8
 spot_range = 31.38468
 spot_angle = 17.177357
 
-[node name="Particles" type="GPUParticles3D" parent="Player"]
+[node name="Particles" type="GPUParticles3D" parent="Player" node_paths=PackedStringArray("subject")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.518785, 0)
 amount = 80
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_1bvp3")
 draw_pass_1 = SubResource("SphereMesh_lquwl")
 script = ExtResource("3_lquwl")
+subject = NodePath("..")
 
-[node name="Audio" type="Node3D" parent="Player" node_paths=PackedStringArray("hit", "jump", "hurt", "death")]
+[node name="Audio" type="Node3D" parent="Player" node_paths=PackedStringArray("hit", "jump", "hurt", "death", "subject")]
 script = ExtResource("4_yaehf")
 hit = NodePath("HitAudio")
 jump = NodePath("JumpAudio")
 hurt = NodePath("HurtAudio")
 death = NodePath("GameOver")
+subject = NodePath("..")
 
 [node name="HitAudio" type="AudioStreamPlayer3D" parent="Player/Audio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3287543, 0)
@@ -189,7 +191,15 @@ stream = SubResource("AudioStreamRandomizer_seu75")
 [node name="GameOver" type="AudioStreamPlayer3D" parent="Player/Audio"]
 stream = ExtResource("16_074og")
 
-[node name="GameOverUI" type="Label" parent="Player"]
+[node name="EnemyPool" type="Node" parent="." node_paths=PackedStringArray("enemyParent", "player")]
+script = ExtResource("2_h2yge")
+enemyParent = NodePath("../EnemyParent")
+enemyPrefab = ExtResource("3_1bvp3")
+player = NodePath("../Player")
+
+[node name="EnemyParent" type="Node3D" parent="."]
+
+[node name="GameOverUI" type="Label" parent="." node_paths=PackedStringArray("subject")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -205,11 +215,4 @@ text = "game over"
 label_settings = SubResource("LabelSettings_82xsv")
 horizontal_alignment = 1
 script = ExtResource("18_82xsv")
-
-[node name="EnemyPool" type="Node" parent="." node_paths=PackedStringArray("enemyParent", "player")]
-script = ExtResource("2_h2yge")
-enemyParent = NodePath("../EnemyParent")
-enemyPrefab = ExtResource("3_1bvp3")
-player = NodePath("../Player")
-
-[node name="EnemyParent" type="Node3D" parent="."]
+subject = NodePath("../Player")

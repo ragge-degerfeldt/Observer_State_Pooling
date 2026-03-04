@@ -2,17 +2,21 @@ using Godot;
 using System;
 using System.Collections;
 
-public partial class PlayerAudio: Node3D, Observer
+public partial class PlayerAudio: Node3D, IObserver
 {
 	[Export] AudioStreamPlayer3D hit;
 	[Export] AudioStreamPlayer3D jump;
 	[Export] AudioStreamPlayer3D hurt;
 	[Export] AudioStreamPlayer3D death;
 
+	[Export] Node subject;
+
 	public override void _Ready()
 	{
-		CharacterController player = (CharacterController)GetParent();
-		player.subject.Register(this);
+		if(!Subject.TryRegister(subject, this))
+		{
+			GD.Print("Player Audio observer did not register");
+		}
 	}
 
 	public void OnNotify(Event _event)
